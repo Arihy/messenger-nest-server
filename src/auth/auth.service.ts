@@ -1,10 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../users/interfaces/user.interface';
 import { UsersService } from '../users/users.service';
-import { CredencialsDTO } from '../users/dto/credencials-dto.class';
+import { UserCredencialsDTO } from '../users/dto/user-credencials.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { TokenDTO } from './dto/token-dto.class';
+import { User } from '../users/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -13,15 +13,19 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(user: User): Promise<TokenDTO> {
-    const payload: JwtPayload = { username: user.username, sub: user.id };
+  async register(user: UserCredencialsDTO): Promise<User> {
+    return this.usersService.register(user);
+  }
+
+  async login(user: UserCredencialsDTO): Promise<TokenDTO> {
+    const payload: JwtPayload = { username: user.username };
 
     return {
       accessToken: this.jwtService.sign(payload),
     };
   }
 
-  async validateUser(credencials: CredencialsDTO): Promise<User> {
+  async validateUser(credencials: UserCredencialsDTO): Promise<User> {
     const user = await this.usersService.findOne(credencials.username);
 
     if (!user) {

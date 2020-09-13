@@ -10,7 +10,7 @@ JWT_SECRET=uneclesecrete
 JWT_EXPIRATION_TIME=3600
 ```
 
-Installer les paquages et lancer le serveur avec les commandes suivantes:
+Installer les packages et lancer le serveur avec les commandes suivantes:
 
 ```bash
 $ yarn install

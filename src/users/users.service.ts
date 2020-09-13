@@ -7,11 +7,17 @@ export class UsersService {
 
   constructor() {
     // TODO: ajouter une bdd pour stocker les users
+    // TODO: crypter le pass
     this.users = [
       {
         id: 1,
         username: 'admin',
         password: 'secretPass123',
+      },
+      {
+        id: 2,
+        username: 'chris',
+        password: 'secret',
       },
     ];
   }

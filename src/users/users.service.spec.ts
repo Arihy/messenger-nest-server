@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { User } from './interfaces/user.interface';
+import { UserCredencialsDTO } from './dto/user-credencials.dto';
+import { User } from './schemas/user.schema';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -18,13 +19,12 @@ describe('UsersService', () => {
   });
 
   it('should return the admin user', async () => {
-    const user: User = {
-      id: 1,
+    const user: UserCredencialsDTO = {
       password: 'secretPass123',
       username: 'admin',
     };
 
-    const expectedUser = await service.findOne('admin');
-    expect(expectedUser).toEqual(user);
+    const expectedUser = await service.findOne(user.username);
+    expect(expectedUser.username).toEqual(user.username);
   });
 });

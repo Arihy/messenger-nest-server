@@ -11,18 +11,30 @@ export class UsersService {
   readonly saltRounds = 10;
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async register(user: UserCredencialsDTO): Promise<User> {
+  /**
+   * Permet d'enregistrer un utilisateur dans la bbb
+   * @param user
+   */
+  async register(user: UserCredencialsDTO): Promise<UserDTO> {
     user.password = await bcrypt.hash(user.password, this.saltRounds);
     const createdUser = new this.userModel(user);
-    return createdUser.save();
+    const response = await createdUser.save();
+    return { id: response._id, username: response.username };
   }
 
+  /**
+   * Permet de trouver l'utilisateur avec le usename en parametre
+   * @param username
+   */
   async findOne(username: string): Promise<User> {
-    return this.userModel.findOne({ username: username }).exec();
+    return this.userModel.findOne({ username: username });
   }
 
+  /**
+   * Permet de récupérer tous les utilisateurs
+   */
   async findAll(): Promise<Array<UserDTO>> {
-    const users = await this.userModel.find().exec();
+    const users = await this.userModel.find();
     return users.map(user => ({ id: user._id, username: user.username }));
   }
 }

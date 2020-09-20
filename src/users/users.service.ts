@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
-import { UserCredencialsDTO } from './dto/user-credencials.dto';
 import { UserDTO } from './dto/user.dto';
 import { User } from './schemas/user.schema';
+import { CreateUserDTO } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -15,11 +15,15 @@ export class UsersService {
    * Permet d'enregistrer un utilisateur dans la bbb
    * @param user
    */
-  async register(user: UserCredencialsDTO): Promise<UserDTO> {
+  async register(user: CreateUserDTO): Promise<UserDTO> {
     user.password = await bcrypt.hash(user.password, this.saltRounds);
     const createdUser = new this.userModel(user);
     const response = await createdUser.save();
-    return { id: response._id, username: response.username };
+    return {
+      id: response._id,
+      username: response.username,
+      email: response.email,
+    };
   }
 
   /**
@@ -35,6 +39,10 @@ export class UsersService {
    */
   async findAll(): Promise<Array<UserDTO>> {
     const users = await this.userModel.find();
-    return users.map(user => ({ id: user._id, username: user.username }));
+    return users.map(user => ({
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    }));
   }
 }

@@ -8,6 +8,7 @@ import { UsersService } from '../users/users.service';
 import { TokenDTO } from './dto/token-dto.class';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserDTO } from '../users/dto/user.dto';
+import { CreateUserDTO } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async register(user: UserCredencialsDTO): Promise<UserDTO> {
+  async register(user: CreateUserDTO): Promise<UserDTO> {
     return this.usersService.register(user);
   }
 

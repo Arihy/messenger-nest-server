@@ -4,13 +4,14 @@ import { TokenDTO } from './auth/dto/token-dto.class';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { UserCredencialsDTO } from './users/dto/user-credencials.dto';
 import { UserDTO } from './users/dto/user.dto';
+import { CreateUserDTO } from './users/dto/create-user.dto';
 
 @Controller()
 export class AppController {
   constructor(private authService: AuthService) {}
 
   @Post('auth/signup')
-  async signup(@Body() userCredencials: UserCredencialsDTO): Promise<UserDTO> {
+  async signup(@Body() userCredencials: CreateUserDTO): Promise<UserDTO> {
     return this.authService.register(userCredencials);
   }
 

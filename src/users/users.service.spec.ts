@@ -14,9 +14,9 @@ describe('UsersService', () => {
       .fn()
       .mockResolvedValue({ username: 'admin', password: 'secret' });
     static find = jest.fn().mockResolvedValue([
-      { username: 'admin', password: 'secret' },
-      { username: 'Jo', password: 'secret' },
-      { username: 'Martin', password: 'secret' },
+      { id: '2135225', username: 'admin', email: 'admin@gmail.com' },
+      { id: '2135298', username: 'Jo', email: 'jo@gmail.com' },
+      { id: '2545225', username: 'Martin', email: 'martin@gmail.com' },
     ]);
   }
 
@@ -49,8 +49,8 @@ describe('UsersService', () => {
   });
 
   it('should return an array of users', async () => {
-    const expectedUser = await service.findAll();
-    expect(expectedUser).toBeInstanceOf(Array);
-    expect(expectedUser).toHaveLength(3);
+    const expectedUsers = await service.findAll();
+    expect(expectedUsers).toBeInstanceOf(Array);
+    expect(expectedUsers).toHaveLength(3);
   });
 });

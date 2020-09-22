@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
@@ -16,14 +16,24 @@ export class UsersService {
    * @param user
    */
   async register(user: CreateUserDTO): Promise<UserDTO> {
-    user.password = await bcrypt.hash(user.password, this.saltRounds);
-    const createdUser = new this.userModel(user);
-    const response = await createdUser.save();
-    return {
-      id: response._id,
-      username: response.username,
-      email: response.email,
-    };
+    try {
+      user.password = await bcrypt.hash(user.password, this.saltRounds);
+      const createdUser = new this.userModel(user);
+      const response = await createdUser.save();
+      return {
+        id: response._id,
+        username: response.username,
+        email: response.email,
+      };
+    } catch (err) {
+      if (err.code === 11000) {
+        throw new HttpException(
+          'Email déjà enregistré.',
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      }
+      throw err;
+    }
   }
 
   /**

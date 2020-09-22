@@ -18,10 +18,18 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
+  /**
+   * Permet de d'enregister un utilisateur
+   * @param { CreateUserDTO } user
+   */
   async register(user: CreateUserDTO): Promise<UserDTO> {
     return this.usersService.register(user);
   }
 
+  /**
+   * Permet de logger (créer un token) pour l'utilisateur
+   * @param { UserCredencialsDTO } user
+   */
   async login(user: UserCredencialsDTO): Promise<TokenDTO> {
     const payload: JwtPayload = { username: user.username };
 
@@ -30,17 +38,27 @@ export class AuthService {
     };
   }
 
+  /**
+   * Permet de valider les credencials de l'utilisateur
+   * @param credencials
+   */
   async validateUser(credencials: UserCredencialsDTO): Promise<User> {
     const user = await this.usersService.findOne(credencials.username);
 
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'Login ou mot de passe incorrect',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const samePass = await bcrypt.compare(credencials.password, user.password);
 
     if (!samePass) {
-      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'Login ou mot de passe incorrect',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     return user;
